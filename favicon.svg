@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <title>Lucid</title>
+  <defs>
+    <!-- Chrome is read as a horizon: sky above, ground below, and a hard flip
+         between them. A single light-to-dark ramp reads as grey plastic; the
+         flip at the midpoint is what makes it metal. The darks are kept light
+         enough to stay silver - at 128px a deep horizon band reads as a smudge
+         rather than a reflection. -->
+    <linearGradient id="face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#ffffff"/>
+      <stop offset="6%"   stop-color="#f2f6f9"/>
+      <stop offset="20%"  stop-color="#c6d0d8"/>
+      <stop offset="38%"  stop-color="#99a4ad"/>
+      <stop offset="48%"  stop-color="#7e8891"/>
+      <stop offset="50%"  stop-color="#6f7982"/>
+      <stop offset="52%"  stop-color="#bbc5cd"/>
+      <stop offset="60%"  stop-color="#eff3f6"/>
+      <stop offset="68%"  stop-color="#ffffff"/>
+      <stop offset="78%"  stop-color="#d4dce2"/>
+      <stop offset="90%"  stop-color="#a9b3bb"/>
+      <stop offset="100%" stop-color="#8f99a2"/>
+    </linearGradient>
+
+    <!-- Side walls catch far less light than the face they border, but stay
+         well above black so the solid still reads as polished metal. -->
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#aab4bc"/>
+      <stop offset="40%"  stop-color="#727c84"/>
+      <stop offset="100%" stop-color="#565e65"/>
+    </linearGradient>
+
+    <linearGradient id="underside" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#5f676e"/>
+      <stop offset="100%" stop-color="#454c52"/>
+    </linearGradient>
+  </defs>
+
+  <!-- The extruded body, drawn first. Filling the whole offset copy and then
+       covering it with the front face gives the correct silhouette for free,
+       without working out which edges lie on the horizon. -->
+  <path d="M36 16 H65 V100 H106 V120 H36 Z" fill="#5b636a"/>
+
+  <!-- The two walls and the underside, refined over the flat body so the depth
+       reads as three distinct surfaces rather than one slab. -->
+  <path d="M51 8 L65 16 V100 L51 92 Z" fill="url(#wall)"/>
+  <path d="M92 92 L106 100 V120 L92 112 Z" fill="url(#wall)"/>
+  <path d="M22 112 L36 120 H106 L92 112 Z" fill="url(#underside)"/>
+
+  <!-- Front face. -->
+  <path d="M22 8 H51 V92 H92 V112 H22 Z" fill="url(#face)"/>
+
+  <!-- Bevel. Upward- and leftward-facing edges take the key light; the edges
+       meeting the walls fall away from it. Strokes rather than an overlay, so
+       the face gradient still shows through. -->
+  <path d="M22 112 V8 H51" fill="none" stroke="#ffffff" stroke-opacity="0.9" stroke-width="1.7" stroke-linejoin="round"/>
+  <path d="M51 92 H92" fill="none" stroke="#ffffff" stroke-opacity="0.65" stroke-width="1.5"/>
+  <path d="M51 8 V92" fill="none" stroke="#5e666d" stroke-opacity="0.5" stroke-width="1"/>
+  <path d="M92 92 V112 H22" fill="none" stroke="#5e666d" stroke-opacity="0.45" stroke-width="1"/>
+</svg>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy notice — Lucid Programming</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+  :root {
+    --bg:#0f1419; --panel:#161d25; --panel-2:#1b232d; --line:#273240;
+    --text:#dbe2ea; --muted:#8d99a8; --accent:#ff6a5f; --teal:#4ec9b0;
+    --mono:"Cascadia Code",Consolas,"SF Mono",Menlo,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 var(--sans);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px}
+  header{border-bottom:1px solid var(--line)}
+  .bar{display:flex;align-items:center;gap:13px;padding:18px 0}
+  .bar a{color:var(--text);text-decoration:none;font-weight:650}
+  .bar .back{margin-left:auto;color:var(--muted);font-weight:400;font-size:14.5px}
+  .bar .back:hover{color:var(--text)}
+  main{padding:44px 0 72px}
+  h1{font-size:31px;letter-spacing:-.02em;margin:0 0 6px}
+  h2{font-size:20px;letter-spacing:-.01em;margin:36px 0 10px;padding-top:18px;border-top:1px solid var(--line)}
+  h3{font-size:16.5px;margin:26px 0 8px}
+  p{margin:0 0 15px}
+  ul,ol{margin:0 0 15px;padding-left:22px}
+  li{margin-bottom:7px}
+  a{color:var(--teal)}
+  code{font:.92em var(--mono);background:var(--panel-2);padding:1px 6px;border-radius:4px;color:var(--teal)}
+  hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+  strong{font-weight:600}
+  footer{border-top:1px solid var(--line);padding:26px 0 44px;font-size:14px;color:var(--muted)}
+  footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+  <a href="/">Lucid Programming</a>
+  <a class="back" href="/">&larr; Back to site</a>
+</div></header>
+<main><div class="wrap">
+<h1>ICS Language Tools Privacy Notice</h1>
+<p>Effective September 15, 2026</p>
+<h2>Summary</h2>
+<p>ICS Language Tools performs source conversion and language processing locally. The extension does not intentionally transmit source code, filenames, project paths, editor contents, ICS output, or generated C# to Lucid Programming or Lemon Squeezy. The extension does not include its own analytics or usage telemetry.</p>
+<h2>License activation and validation</h2>
+<p>Network access to <code>https://api.lemonsqueezy.com</code> occurs only for ICS Pro license activation, periodic validation, and user-requested deactivation. During activation, the extension sends:</p>
+<ul>
+<li>the license key entered by the user; and</li>
+<li>VS Code's machine identifier as the Lemon Squeezy instance name.</li>
+</ul>
+<p>During later validation, the extension sends:</p>
+<ul>
+<li>the license key; and</li>
+<li>the instance identifier returned by Lemon Squeezy during activation.</li>
+</ul>
+<p>During deactivation, the extension sends the same license key and instance identifier. After Lemon Squeezy confirms deactivation, the extension deletes the locally stored license key, instance state, and validation cache. VS Code describes its machine identifier as a unique identifier for the computer. As with any Internet request, Lemon Squeezy may also receive ordinary connection and request metadata, such as an IP address and HTTP headers, under its own privacy terms. Lemon Squeezy's response may contain license, product, order, instance, or customer metadata. The extension uses only the activation or validation result, license status and expiry, instance identifier, and any error message. It does not retain customer or order metadata from the response.</p>
+<h2>Data stored locally</h2>
+<p>The extension stores:</p>
+<ul>
+<li>the raw license key in VS Code Secret Storage;</li>
+<li>a SHA-256 hash of the key for cache invalidation;</li>
+<li>the Lemon Squeezy instance identifier;</li>
+<li>the VS Code machine identifier; and</li>
+<li>cached validation status, timestamps, expiry, and the most recent validation   message.</li>
+</ul>
+<p>This information is used only to activate, validate, and cache ICS Pro access. It remains under VS Code's local extension-storage mechanisms until replaced or removed through VS Code's storage or extension-data controls.</p>
+<h2>User-initiated bug reports</h2>
+<p>When an ICS operation fails, the extension may offer <strong>Report Issue</strong>. The same action is available from the Command Palette and control panel. Choosing it prepares a diagnostic report in an untitled local editor. The report is not included in a URL and is not transmitted to GitHub automatically. The report contains product and environment versions plus redacted error and stack information. Automated redaction cannot guarantee that arbitrary error text contains no project identifiers or source fragments, so the extension requires the user to review the local report before offering to copy it and open the public GitHub issue form. The user must paste and submit the report deliberately. GitHub processes the resulting visit and anything the user pastes or submits under GitHub's own terms and privacy notice.</p>
+<h2>Checkout and external pages</h2>
+<p>Choosing <strong>ICS: Upgrade to Pro</strong> opens the configured purchase page in the default browser. The website and payment provider process that visit under their own terms and privacy notices. ICS Language Tools does not receive payment-card details.</p>
+<h2>Other software</h2>
+<p>VS Code, the operating system, Git hosting providers, and other installed extensions may independently process data. Their behavior is outside this notice and is governed by their respective settings and privacy terms.</p>
+<h2>Changes</h2>
+<p>This notice may be updated when the extension's data practices change. Material changes will be reflected in the notice distributed with a later release.</p>
+</div></main>
+<footer><div class="wrap">
+  <a href="privacy.html">Privacy notice</a> &nbsp;·&nbsp;
+  <a href="terms.html">Product terms</a> &nbsp;·&nbsp;
+  <a href="https://github.com/Administrator-Lucid-Programming/ics-support/issues">Support</a>
+</div></footer>
+</body>
+</html>

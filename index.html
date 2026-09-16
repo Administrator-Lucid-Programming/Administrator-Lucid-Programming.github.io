@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ICS Language Tools — write C# without the braces</title>
+<meta name="description" content="ICS is a brace-free, indentation-based view of C# for Visual Studio Code. The files on disk stay ordinary C#.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="ICS Language Tools">
+<meta property="og:description" content="A brace-free, indentation-based view of C# for Visual Studio Code. The files on disk stay ordinary C#.">
+<meta property="og:type" content="website">
+<style>
+  /* Palette taken from the extension's own ICS semantic token colours, so the
+     site and the editor read as one product. */
+  :root {
+    --bg: #0f1419;
+    --panel: #161d25;
+    --panel-2: #1b232d;
+    --line: #273240;
+    --text: #dbe2ea;
+    --muted: #8d99a8;
+    --accent: #ff6a5f;   /* ics keyword */
+    --teal: #4ec9b0;     /* ics type */
+    --kw: #ff6a5f;
+    --ctl: #c586c0;
+    --type: #4ec9b0;
+    --method: #dcdcaa;
+    --param: #ce9178;
+    --var: #9cdcfe;
+    --prop: #d4d4d4;
+    --mono: "Cascadia Code", "JetBrains Mono", Consolas, "SF Mono", Menlo, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.65 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+  a { color: var(--teal); }
+  h1, h2, h3 { line-height: 1.2; letter-spacing: -0.02em; margin: 0; }
+
+  /* ---------- header ---------- */
+  header { border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; gap: 14px; padding: 18px 0; }
+  .bar svg { width: 34px; height: 34px; display: block; }
+  .brand { font-weight: 650; letter-spacing: -0.01em; }
+  .bar nav { margin-left: auto; display: flex; gap: 22px; font-size: 14.5px; }
+  .bar nav a { color: var(--muted); text-decoration: none; white-space: nowrap; }
+  .bar nav a:hover { color: var(--text); }
+  /* Below this width the four nav links cannot fit beside the wordmark without
+     wrapping into an ugly stack; every destination is reachable from the page
+     body and the footer, so they are dropped rather than crammed. */
+  @media (max-width: 620px) {
+    .bar nav { display: none; }
+    .brand { font-size: 15px; }
+  }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 76px 0 56px; text-align: center; }
+  .hero svg { width: 96px; height: 96px; margin-bottom: 26px; }
+  .hero h1 { font-size: clamp(34px, 6vw, 54px); font-weight: 680; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .lede {
+    max-width: 640px; margin: 20px auto 0;
+    font-size: clamp(16.5px, 2.2vw, 19px); color: var(--muted);
+  }
+  .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+  .btn {
+    display: inline-block; padding: 11px 22px; border-radius: 7px;
+    font-size: 15px; font-weight: 560; text-decoration: none;
+    border: 1px solid var(--line); color: var(--text); background: var(--panel-2);
+  }
+  .btn:hover { border-color: #3a485a; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #1a0b09; }
+  .btn.primary:hover { filter: brightness(1.08); }
+  .req { margin-top: 18px; font-size: 13.5px; color: var(--muted); }
+
+  /* ---------- sections ---------- */
+  section { padding: 60px 0; border-top: 1px solid var(--line); }
+  .eyebrow {
+    font-size: 12.5px; font-weight: 640; letter-spacing: 0.09em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+  }
+  h2 { font-size: clamp(24px, 3.6vw, 31px); }
+  .sub { color: var(--muted); margin-top: 12px; max-width: 660px; }
+
+  /* ---------- code comparison ---------- */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 32px; }
+  @media (max-width: 760px) { .compare { grid-template-columns: 1fr; } }
+  /* min-width:0 is load-bearing. Grid items default to min-width:auto, which
+     refuses to shrink below the intrinsic width of the <pre> inside - so the
+     code panels push the whole body wider than the viewport and the page
+     scrolls sideways, clipping the hero. With this, the pre scrolls inside its
+     own card instead and the body never exceeds the screen. */
+  .card, .feat, .tier { min-width: 0; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .card > figcaption {
+    padding: 11px 16px; font-size: 12.5px; color: var(--muted);
+    border-bottom: 1px solid var(--line); background: var(--panel-2);
+    display: flex; justify-content: space-between; gap: 12px;
+  }
+  .card > figcaption b { color: var(--text); font-weight: 580; }
+  pre {
+    margin: 0; padding: 18px 16px; overflow-x: auto;
+    font: 13.5px/1.62 var(--mono); tab-size: 4;
+  }
+  .k { color: var(--kw); } .c { color: var(--ctl); } .t { color: var(--type); }
+  .m { color: var(--method); } .p { color: var(--param); } .v { color: var(--var); }
+  .n { color: var(--prop); } .b { color: #5c6b7d; }
+  .note { margin-top: 18px; font-size: 14.5px; color: var(--muted); }
+  .note strong { color: var(--text); font-weight: 580; }
+
+  /* ---------- feature grid ---------- */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 34px; }
+  @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+  .feat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 22px; }
+  .feat h3 { font-size: 16.5px; margin-bottom: 9px; }
+  .feat p { margin: 0; color: var(--muted); font-size: 14.8px; }
+
+  /* ---------- tiers ---------- */
+  .tiers { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 34px; }
+  @media (max-width: 760px) { .tiers { grid-template-columns: 1fr; } }
+  .tier { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 26px; }
+  .tier.pro { border-color: #3d3038; background: linear-gradient(180deg, #1d1a1f, var(--panel)); }
+  .tier h3 { font-size: 19px; }
+  .tier .who { color: var(--muted); font-size: 14.5px; margin: 8px 0 18px; }
+  .tier ul { list-style: none; margin: 0; padding: 0; }
+  .tier li { position: relative; padding-left: 24px; margin-bottom: 10px; font-size: 15px; }
+  .tier li::before {
+    content: ""; position: absolute; left: 4px; top: 8px;
+    width: 7px; height: 7px; border-radius: 50%; background: var(--teal);
+  }
+  .tier.pro li::before { background: var(--accent); }
+
+  /* ---------- privacy ---------- */
+  .privacy { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--teal);
+             border-radius: 10px; padding: 26px 28px; margin-top: 30px; }
+  .privacy p { margin: 0 0 14px; color: var(--muted); }
+  .privacy p:last-child { margin-bottom: 0; }
+  .privacy strong { color: var(--text); font-weight: 580; }
+  code { font: 0.92em var(--mono); background: var(--panel-2); padding: 1px 6px; border-radius: 4px; color: var(--teal); }
+
+  /* ---------- footer ---------- */
+  footer { border-top: 1px solid var(--line); padding: 34px 0 48px; font-size: 14px; color: var(--muted); }
+  .flinks { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; }
+  .flinks a { color: var(--muted); text-decoration: none; }
+  .flinks a:hover { color: var(--text); text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <svg viewBox="0 0 128 128" aria-hidden="true"><use href="#logo"/></svg>
+    <span class="brand">Lucid Programming</span>
+    <nav>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Free &amp; Pro</a>
+      <a href="#privacy">Privacy</a>
+      <a href="https://github.com/Administrator-Lucid-Programming/ics-support">Support</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Logo, defined once and referenced above and in the hero. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="lg-face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/><stop offset="6%" stop-color="#f2f6f9"/>
+      <stop offset="20%" stop-color="#c6d0d8"/><stop offset="38%" stop-color="#99a4ad"/>
+      <stop offset="48%" stop-color="#7e8891"/><stop offset="50%" stop-color="#6f7982"/>
+      <stop offset="52%" stop-color="#bbc5cd"/><stop offset="60%" stop-color="#eff3f6"/>
+      <stop offset="68%" stop-color="#ffffff"/><stop offset="78%" stop-color="#d4dce2"/>
+      <stop offset="90%" stop-color="#a9b3bb"/><stop offset="100%" stop-color="#8f99a2"/>
+    </linearGradient>
+    <linearGradient id="lg-wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#aab4bc"/><stop offset="40%" stop-color="#727c84"/>
+      <stop offset="100%" stop-color="#565e65"/>
+    </linearGradient>
+    <linearGradient id="lg-under" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5f676e"/><stop offset="100%" stop-color="#454c52"/>
+    </linearGradient>
+    <g id="logo">
+      <path d="M36 16 H65 V100 H106 V120 H36 Z" fill="#5b636a"/>
+      <path d="M51 8 L65 16 V100 L51 92 Z" fill="url(#lg-wall)"/>
+      <path d="M92 92 L106 100 V120 L92 112 Z" fill="url(#lg-wall)"/>
+      <path d="M22 112 L36 120 H106 L92 112 Z" fill="url(#lg-under)"/>
+      <path d="M22 8 H51 V92 H92 V112 H22 Z" fill="url(#lg-face)"/>
+      <path d="M22 112 V8 H51" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="1.7" stroke-linejoin="round"/>
+      <path d="M51 92 H92" fill="none" stroke="#fff" stroke-opacity=".65" stroke-width="1.5"/>
+      <path d="M51 8 V92" fill="none" stroke="#5e666d" stroke-opacity=".5" stroke-width="1"/>
+      <path d="M92 92 V112 H22" fill="none" stroke="#5e666d" stroke-opacity=".45" stroke-width="1"/>
+    </g>
+  </defs>
+</svg>
+
+<div class="wrap hero">
+  <svg viewBox="0 0 128 128" aria-label="Lucid Programming"><use href="#logo"/></svg>
+  <h1>Write C# <em>without the braces</em></h1>
+  <p class="lede">
+    ICS — Indentation-based C# Syntax — is a brace-free view of your code for Visual Studio Code.
+    Indentation carries the structure that braces used to. The files on disk stay ordinary C#.
+  </p>
+  <div class="cta">
+    <a class="btn primary" href="https://marketplace.visualstudio.com/items?itemName=lucid-programming.ics-vscode">Install for VS&nbsp;Code</a>
+    <a class="btn" href="#how">See how it works</a>
+  </div>
+  <p class="req">Requires Visual Studio Code 1.100 or later and the .NET&nbsp;10 runtime.</p>
+</div>
+
+<section id="how">
+  <div class="wrap">
+    <p class="eyebrow">The same file, two views</p>
+    <h2>Your C# is still C#</h2>
+    <p class="sub">
+      ICS is a projection, not a format. Open a <code>.cs</code> file as ICS, edit it, apply it back.
+      Nothing new is written to disk — no sidecar files, no embedded metadata.
+    </p>
+
+    <div class="compare">
+      <figure class="card">
+        <figcaption><b>InvoiceService.cs</b><span>on disk — 24 lines</span></figcaption>
+<pre><span class="k">namespace</span> <span class="t">Billing</span>;
+
+<span class="k">public class</span> <span class="t">InvoiceService</span>
+{
+    <span class="k">private readonly</span> <span class="t">IClock</span> <span class="n">clock</span>;
+
+    <span class="k">public</span> <span class="k">decimal</span> <span class="m">Total</span>(<span class="t">IEnumerable</span>&lt;<span class="t">Line</span>&gt; <span class="p">lines</span>)
+    {
+        <span class="k">decimal</span> <span class="v">total</span> = 0m;
+        <span class="c">foreach</span> (<span class="k">var</span> <span class="v">line</span> <span class="c">in</span> <span class="p">lines</span>)
+        {
+            <span class="c">if</span> (<span class="v">line</span>.<span class="n">Taxable</span>)
+            {
+                <span class="v">total</span> += <span class="v">line</span>.<span class="n">Amount</span> * 1.2m;
+            }
+            <span class="c">else</span>
+            {
+                <span class="v">total</span> += <span class="v">line</span>.<span class="n">Amount</span>;
+            }
+        }
+
+        <span class="c">return</span> <span class="v">total</span>;
+    }
+}</pre>
+      </figure>
+
+      <figure class="card">
+        <figcaption><b>InvoiceService.ics</b><span>what you edit — 14 lines</span></figcaption>
+<pre><span class="k">namespace</span> <span class="t">Billing</span>
+
+<span class="k">public class</span> <span class="t">InvoiceService</span>
+    <span class="k">private readonly</span> <span class="t">IClock</span> <span class="n">clock</span>
+
+    <span class="k">public</span> <span class="k">decimal</span> <span class="m">Total</span>(<span class="t">IEnumerable</span>&lt;<span class="t">Line</span>&gt; <span class="p">lines</span>)
+        <span class="k">decimal</span> <span class="v">total</span> = 0m
+        <span class="c">foreach</span> (<span class="k">var</span> <span class="v">line</span> <span class="c">in</span> <span class="p">lines</span>)
+            <span class="c">if</span> (<span class="v">line</span>.<span class="n">Taxable</span>)
+                <span class="v">total</span> += <span class="v">line</span>.<span class="n">Amount</span> * 1.2m
+            <span class="c">else</span>
+                <span class="v">total</span> += <span class="v">line</span>.<span class="n">Amount</span>
+
+        <span class="c">return</span> <span class="v">total</span></pre>
+      </figure>
+    </div>
+
+    <p class="note">
+      <strong>Ten lines disappear, and every one of them was a brace.</strong>
+      Optional punctuation goes with them. Stripping parentheses from conditions and
+      collapsing property accessors are separate settings, off by default.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Built to be trusted with your source</p>
+    <h2>It refuses to lose your code</h2>
+
+    <div class="grid">
+      <div class="feat">
+        <h3>Round-trips exactly</h3>
+        <p>An unchanged preview returns the original C# precisely. No metadata is embedded in ICS and no sidecar files are written.</p>
+      </div>
+      <div class="feat">
+        <h3>Rejects lossy edits</h3>
+        <p>Rather than applying a conversion that would drop meaningful code or comments, the extension refuses the edit and tells you why.</p>
+      </div>
+      <div class="feat">
+        <h3>Notices outside changes</h3>
+        <p>Saves detect edits made elsewhere, and converter recovery preserves unsaved buffers instead of discarding them.</p>
+      </div>
+      <div class="feat">
+        <h3>Your language features still work</h3>
+        <p>Hover, go to definition, find references, completion, semantic highlighting, and code lenses operate on the ICS view.</p>
+      </div>
+      <div class="feat">
+        <h3>Problems panel integration</h3>
+        <p>ICS parse errors and Roslyn diagnostics from the generated C# appear where you already look for them.</p>
+      </div>
+      <div class="feat">
+        <h3>Format on your terms</h3>
+        <p>The standard Format Document shortcut canonicalizes ICS through the converter, so shared files stay consistent.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <p class="eyebrow">Pricing</p>
+    <h2>Free to use. Pro when ICS becomes how you work.</h2>
+    <p class="sub">
+      Everything needed to read, edit, and convert C# through ICS is free. Pro removes the
+      remaining seams for people who want ICS to be the editor, not a preview.
+    </p>
+
+    <div class="tiers">
+      <div class="tier">
+        <h3>Free</h3>
+        <p class="who">For trying ICS, and for using it file by file.</p>
+        <ul>
+          <li>Open any C# file as an editable ICS view</li>
+          <li>Apply your ICS edits back to the C# file</li>
+          <li>Sync <code>.ics</code> files to C#, on demand or on save</li>
+          <li>Export a standalone <code>.ics</code> file</li>
+          <li>Format and canonicalize ICS documents</li>
+          <li>Diagnostics in the Problems panel</li>
+          <li>Every conversion option, including brace and parenthesis removal</li>
+        </ul>
+      </div>
+
+      <div class="tier pro">
+        <h3>ICS Pro</h3>
+        <p class="who">For working in ICS all day, on every file.</p>
+        <ul>
+          <li><b>ICS-only mode</b> — C# editors are replaced entirely by ICS views</li>
+          <li><b>Live update</b> — edits flow back to the C# file as you type</li>
+          <li><b>Auto-save</b> — paired C# is written after each successful update</li>
+          <li>Per-machine licence you can release and move</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="privacy">
+  <div class="wrap">
+    <p class="eyebrow">Privacy</p>
+    <h2>Your source never leaves your machine</h2>
+
+    <div class="privacy">
+      <p>
+        <strong>The ICS converter contains no networking code at all.</strong> Not a policy —
+        a property of the build. Conversion, parsing, and diagnostics happen entirely on your computer.
+      </p>
+      <p>
+        The extension makes network requests to exactly one destination, <code>api.lemonsqueezy.com</code>,
+        and only to activate, validate, or release an ICS Pro licence. No source code, file names, or
+        paths are transmitted, ever. There is no analytics or usage telemetry.
+      </p>
+      <p>
+        <strong>Error reports are never sent automatically.</strong> When something fails, the diagnostic
+        opens in a local editor for you to read and edit. It is never placed in a URL. Only if you
+        choose to copy it and open the issue form does anything leave your machine.
+      </p>
+      <p>
+        You can verify all of this: watch the traffic, or decompile the converter and look for the
+        network stack that isn't there.
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="privacy.html">Privacy notice</a>
+      <a href="terms.html">Product terms</a>
+      <a href="https://github.com/Administrator-Lucid-Programming/ics-support/issues">Report an issue</a>
+      <a href="https://marketplace.visualstudio.com/items?itemName=lucid-programming.ics-vscode">VS Code Marketplace</a>
+    </div>
+    <p>ICS Language Tools is licensed under the Elastic License 2.0. Lucid Programming claims no
+       ownership of source code, ICS files, or generated C# processed using the extension.</p>
+    <p>&copy; 2026 Lucid Programming</p>
+  </div>
+</footer>
+
+</body>
+</html>
