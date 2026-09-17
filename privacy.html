@@ -47,6 +47,8 @@
 <p>Effective September 15, 2026</p>
 <h2>Summary</h2>
 <p>ICS Language Tools performs source conversion and language processing locally. The extension does not intentionally transmit source code, filenames, project paths, editor contents, ICS output, or generated C# to Lucid Programming or Lemon Squeezy. The extension does not include its own analytics or usage telemetry.</p>
+<h2>Runtime installation</h2>
+<p>ICS depends on Microsoft's .NET Install Tool extension to install and maintain the user-level .NET 10 runtime used by the bundled converter. The Install Tool may contact Microsoft services to locate, download, and update that runtime. ICS passes it the requested runtime version and mode and the ICS extension ID; ICS does not pass source code, filenames, project paths, editor contents, ICS output, generated C#, or license data to the Install Tool. Microsoft's extension, services, settings, and privacy terms govern that installation.</p>
 <h2>License activation and validation</h2>
 <p>Network access to <code>https://api.lemonsqueezy.com</code> occurs only for ICS Pro license activation, periodic validation, and user-requested deactivation. During activation, the extension sends:</p>
 <ul>
