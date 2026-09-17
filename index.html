@@ -330,9 +330,14 @@
         a property of the build. Conversion, parsing, and diagnostics happen entirely on your computer.
       </p>
       <p>
-        The extension makes network requests to exactly one destination, <code>api.lemonsqueezy.com</code>,
+        ICS itself makes network requests to exactly one destination, <code>api.lemonsqueezy.com</code>,
         and only to activate, validate, or release an ICS Pro licence. No source code, file names, or
         paths are transmitted, ever. There is no analytics or usage telemetry.
+      </p>
+      <p>
+        The .NET runtime the converter needs is installed by Microsoft's <strong>.NET Install Tool</strong>
+        extension, which contacts Microsoft to download and update it. ICS passes it only the runtime
+        version to fetch and the ICS extension ID — never your code, file names, paths, or licence details.
       </p>
       <p>
         <strong>Error reports are never sent automatically.</strong> When something fails, the diagnostic
