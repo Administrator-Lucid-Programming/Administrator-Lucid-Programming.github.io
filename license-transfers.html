@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activation transfer and deactivation policy — Lucid Programming</title>
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  :root {
+    --bg:#0f1419; --panel:#161d25; --panel-2:#1b232d; --line:#273240;
+    --text:#dbe2ea; --muted:#8d99a8; --accent:#ff6a5f; --teal:#4ec9b0;
+    --mono:"Cascadia Code",Consolas,"SF Mono",Menlo,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 var(--sans);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px}
+  header{border-bottom:1px solid var(--line)}
+  .bar{display:flex;align-items:center;gap:13px;padding:18px 0}
+  .bar a{color:var(--text);text-decoration:none;font-weight:650}
+  .bar .back{margin-left:auto;color:var(--muted);font-weight:400;font-size:14.5px}
+  .bar .back:hover{color:var(--text)}
+  main{padding:44px 0 72px}
+  h1{font-size:31px;letter-spacing:-.02em;margin:0 0 6px}
+  h2{font-size:20px;letter-spacing:-.01em;margin:36px 0 10px;padding-top:18px;border-top:1px solid var(--line)}
+  h3{font-size:16.5px;margin:26px 0 8px}
+  p{margin:0 0 15px}
+  ul,ol{margin:0 0 15px;padding-left:22px}
+  li{margin-bottom:7px}
+  a{color:var(--teal)}
+  code{font:.92em var(--mono);background:var(--panel-2);padding:1px 6px;border-radius:4px;color:var(--teal)}
+  hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+  strong{font-weight:600}
+  footer{border-top:1px solid var(--line);padding:26px 0 44px;font-size:14px;color:var(--muted)}
+  footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+  <a href="/">Lucid Programming</a>
+  <a class="back" href="/">&larr; Back to site</a>
+</div></header>
+<main><div class="wrap">
+<h1>ICS Pro Activation Transfer and Deactivation Policy</h1>
+<p>Effective September 19, 2026</p>
+<h2>Scope</h2>
+<p>ICS Pro is licensed per activated machine. The number of activations and any additional transfer or reset rights are those stated at purchase. This policy explains how the extension manages an activation; it does not increase the activation allowance purchased.</p>
+<h2>Transferring an activation</h2>
+<p>To move an activation to another machine:</p>
+<ol>
+<li>On the currently activated machine, run <strong>ICS: Deactivate License</strong>.</li>
+<li>Wait for confirmation that deactivation succeeded.</li>
+<li>On the destination machine, run <strong>ICS: Enter License Key</strong> and enter the    same key.</li>
+</ol>
+<p>The extension removes its local license key, instance record, and validation cache only after Lemon Squeezy confirms deactivation. This releases the old machine's activation before the destination machine requests a new one.</p>
+<h2>Changing the key on one machine</h2>
+<p>Only one saved ICS Pro license is managed on a machine at a time. If a license is already saved, <strong>ICS: Enter License Key</strong> accepts that same key for validation but refuses a different key. Run <strong>ICS: Deactivate License</strong> first, wait for confirmation, and then enter the different key. This rule prevents an old remote activation from being abandoned when its local key and instance identifier are overwritten.</p>
+<h2>Failed deactivation</h2>
+<p>If Lemon Squeezy rejects the request or cannot be reached, the extension keeps the local license key, instance record, and cache. The activation has not been confirmed as released, so retry <strong>ICS: Deactivate License</strong> when service is available. The extension does not present local deletion as successful remote deactivation. Uninstalling the extension or deleting its local data does not send a deactivation request and may leave the machine counted against the activation limit.</p>
+<h2>Machine unavailable</h2>
+<p>If the activated machine has been lost, replaced, or cannot run the extension, use the private merchant-support route shown on the Lemon Squeezy order page or receipt to request an activation reset. Whether a reset is available is governed by the purchase terms. Do not publish a license key, order details, or customer information in the public issue tracker.</p>
+<h2>Privacy</h2>
+<p>Activation, validation, and deactivation use Lemon Squeezy as described in the <a href="privacy.html">Privacy Notice</a>. Source code and generated output are not sent as part of these license operations.</p>
+</div></main>
+<footer><div class="wrap">
+  <a href="privacy.html">Privacy notice</a> &nbsp;·&nbsp;
+  <a href="terms.html">Product terms</a> &nbsp;·&nbsp;
+  <a href="https://github.com/Administrator-Lucid-Programming/ics-support/issues">Support</a>
+</div></footer>
+</body>
+</html>

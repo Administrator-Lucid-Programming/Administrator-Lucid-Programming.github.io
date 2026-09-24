@@ -20,7 +20,12 @@ function inline(s) {
     return esc(s)
         .replace(/`([^`]+)`/g, '<code>$1</code>')
         .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_match, label, href) => {
+            const websiteHref = /^\.\/[^/]+\.md$/i.test(href)
+                ? href.replace(/^\.\//, '').replace(/\.md$/i, '.html').toLowerCase()
+                : href;
+            return `<a href="${websiteHref}">${label}</a>`;
+        });
 }
 
 function render(md) {
@@ -129,6 +134,7 @@ ${body}
 for (const [file, out, title] of [
     ['PRIVACY.md', 'privacy.html', 'Privacy notice'],
     ['TERMS.md', 'terms.html', 'Product terms'],
+    ['LICENSE-TRANSFERS.md', 'license-transfers.html', 'Activation transfer and deactivation policy'],
 ]) {
     const md = readFileSync(join(src, file), 'utf8');
     writeFileSync(out, shell(title, render(md)), 'utf8');
