@@ -189,7 +189,7 @@
     <a class="btn primary" href="https://marketplace.visualstudio.com/items?itemName=lucid-programming.ics-vscode">Install for VS&nbsp;Code</a>
     <a class="btn" href="#how">See how it works</a>
   </div>
-  <p class="req">Requires Visual Studio Code 1.100 or later and the .NET&nbsp;10 runtime.</p>
+  <p class="req">Requires Visual Studio Code 1.100 or later. The extension installs the needed .NET&nbsp;10 runtime automatically on first use; an Internet connection may be needed for that download.</p>
 </div>
 
 <section id="how">
@@ -197,8 +197,9 @@
     <p class="eyebrow">The same file, two views</p>
     <h2>Your C# is still C#</h2>
     <p class="sub">
-      ICS is a projection, not a format. Open a <code>.cs</code> file as ICS, edit it, apply it back.
-      Nothing new is written to disk — no sidecar files, no embedded metadata.
+      The live ICS view is a projection of a <code>.cs</code> file: edit it and apply it back
+      without creating an <code>.ics</code> sidecar in your project or embedding metadata.
+      Local recovery copies are stored separately in the extension's data folder.
     </p>
 
     <div class="compare">
