@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ICS Language Tools — write C# without the braces</title>
-<meta name="description" content="ICS is a brace-free, indentation-based view of C# for Visual Studio Code. The files on disk stay ordinary C#.">
+<meta name="description" content="ICS is a brace-free, indentation-based view of C# for Visual Studio Code and Visual Studio. The files on disk stay ordinary C#.">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="favicon-16.png" sizes="16x16" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta property="og:title" content="ICS Language Tools">
-<meta property="og:description" content="A brace-free, indentation-based view of C# for Visual Studio Code. The files on disk stay ordinary C#.">
+<meta property="og:description" content="A brace-free, indentation-based view of C# for Visual Studio Code and Visual Studio. The files on disk stay ordinary C#.">
 <meta property="og:type" content="website">
 <style>
   /* Palette taken from the extension's own ICS semantic token colours, so the
@@ -182,14 +182,15 @@
   <img src="logo-256.png" alt="Lucid Programming" width="124" height="124">
   <h1>Write C# <em>without the braces</em></h1>
   <p class="lede">
-    ICS — Indentation-based C# Syntax — is a brace-free view of your code for Visual Studio Code.
+    ICS — Indentation-based C# Syntax — is a brace-free view of your code for Visual Studio Code and Visual Studio.
     Indentation carries the structure that braces used to. The files on disk stay ordinary C#.
   </p>
   <div class="cta">
     <a class="btn primary" href="https://marketplace.visualstudio.com/items?itemName=lucid-programming.ics-vscode">Install for VS&nbsp;Code</a>
+    <a class="btn primary" href="https://marketplace.visualstudio.com/items?itemName=lucid-programming.icsvisualstudio">Install for Visual Studio</a>
     <a class="btn" href="#how">See how it works</a>
   </div>
-  <p class="req">Requires Visual Studio Code 1.100 or later. The extension installs the needed .NET&nbsp;10 runtime automatically on first use; an Internet connection may be needed for that download.</p>
+  <p class="req">VS Code 1.100 or later: the needed .NET&nbsp;10 runtime is installed automatically on first use.<br>Visual Studio 2022 or 2026 on Windows x64: the converter and runtime are included.</p>
 </div>
 
 <section id="how">
@@ -373,9 +374,10 @@
         paths are transmitted, ever. There is no analytics or usage telemetry.
       </p>
       <p>
-        The .NET runtime the converter needs is installed by Microsoft's <strong>.NET Install Tool</strong>
+        In VS Code, the .NET runtime the converter needs is installed by Microsoft's <strong>.NET Install Tool</strong>
         extension, which contacts Microsoft to download and update it. ICS passes it only the runtime
         version to fetch and the ICS extension ID — never your code, file names, paths, or licence details.
+        The Visual Studio extension includes the converter and runtime in its installation package.
       </p>
       <p>
         <strong>Error reports are never sent automatically.</strong> When something fails, the diagnostic
@@ -397,6 +399,7 @@
       <a href="terms.html">Product terms</a>
       <a href="https://github.com/Administrator-Lucid-Programming/ics-support/issues">Report an issue</a>
       <a href="https://marketplace.visualstudio.com/items?itemName=lucid-programming.ics-vscode">VS Code Marketplace</a>
+      <a href="https://marketplace.visualstudio.com/items?itemName=lucid-programming.icsvisualstudio">Visual Studio Marketplace</a>
     </div>
     <p>ICS Language Tools is licensed under the Elastic License 2.0. Lucid Programming claims no
        ownership of source code, ICS files, or generated C# processed using the extension.</p>
